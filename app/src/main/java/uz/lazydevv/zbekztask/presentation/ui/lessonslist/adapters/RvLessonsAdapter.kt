@@ -10,7 +10,8 @@ import uz.lazydevv.zbekztask.databinding.ItemLessonBinding
 import uz.lazydevv.zbekztask.presentation.extensions.loadImageUrl
 
 class RvLessonsAdapter(
-    val onLessonClicked: (position: Int) -> Unit
+    val onLessonClicked: (position: Int) -> Unit,
+    val onClosedLessonClicked: () -> Unit,
 ) : RecyclerView.Adapter<RvLessonsAdapter.LessonVh>() {
 
     private val diffUtilCallback = object : DiffUtil.ItemCallback<LessonM>() {
@@ -28,13 +29,19 @@ class RvLessonsAdapter(
     inner class LessonVh(private val itemBinding: ItemLessonBinding) : RecyclerView.ViewHolder(itemBinding.root) {
         fun onBind(lesson: LessonM) {
             with(itemBinding) {
+                root.alpha = if (lesson.isOpen) 1f else 0.5f
+
                 tvTitle.text = lesson.title
                 tvDescription.text = lesson.description
 
                 ivThumbnail.loadImageUrl(lesson.thumbnailUrl)
 
                 root.setOnClickListener {
-                    onLessonClicked.invoke(absoluteAdapterPosition)
+                    if (lesson.isOpen) {
+                        onLessonClicked.invoke(absoluteAdapterPosition)
+                    } else {
+                        onClosedLessonClicked.invoke()
+                    }
                 }
             }
         }

@@ -2,19 +2,7 @@ package uz.lazydevv.zbekztask.domain.mappers
 
 import uz.lazydevv.zbekztask.data.db.entities.LessonEntity
 import uz.lazydevv.zbekztask.data.models.LessonM
-import uz.lazydevv.zbekztask.data.models.requests.LessonRequestM
-
-fun LessonRequestM.toLessonMList(): List<LessonM> {
-    return this.lessons?.map {
-        LessonM(
-            id = it?.id ?: -1,
-            title = it?.name ?: "",
-            description = it?.description ?: "",
-            thumbnailUrl = it?.thumbnail ?: "",
-            videoUrl = it?.video_url ?: ""
-        )
-    } ?: emptyList()
-}
+import uz.lazydevv.zbekztask.data.models.requests.LessonItem
 
 fun List<LessonM>.toLessonEntityList(): List<LessonEntity> {
     return this.mapIndexed { index, lesson ->
@@ -24,7 +12,8 @@ fun List<LessonM>.toLessonEntityList(): List<LessonEntity> {
             title = lesson.title,
             description = lesson.description,
             thumbnailUrl = lesson.thumbnailUrl,
-            videoUrl = lesson.videoUrl
+            videoUrl = lesson.videoUrl,
+            isOpen = lesson.isOpen
         )
     }
 }
@@ -35,6 +24,17 @@ fun LessonEntity.toLessonM(): LessonM {
         title = this.title,
         description = this.description,
         thumbnailUrl = this.thumbnailUrl,
-        videoUrl = this.videoUrl
+        videoUrl = this.videoUrl,
+        isOpen = this.isOpen
+    )
+}
+
+fun LessonItem?.toLessonM(): LessonM {
+    return LessonM(
+        id = this?.id ?: 0,
+        title = this?.name ?: "",
+        description = this?.description ?: "",
+        thumbnailUrl = this?.thumbnail ?: "",
+        videoUrl = this?.video_url ?: ""
     )
 }

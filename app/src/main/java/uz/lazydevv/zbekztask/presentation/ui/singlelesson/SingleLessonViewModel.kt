@@ -12,17 +12,22 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.onStart
 import uz.lazydevv.zbekztask.data.models.LessonM
+import uz.lazydevv.zbekztask.data.preferences.AppSharedPrefs
 import uz.lazydevv.zbekztask.domain.repositories.LessonsRepo
 import uz.lazydevv.zbekztask.presentation.utils.Resource
 import javax.inject.Inject
 
 @HiltViewModel
 class SingleLessonViewModel @Inject constructor(
-    private val lessonsRepo: LessonsRepo
+    private val lessonsRepo: LessonsRepo,
+    private val sharedPrefs: AppSharedPrefs
 ) : ViewModel() {
 
     private var _lessons = MutableStateFlow<Resource<List<LessonM>>>(Resource.Loading())
     val lessons = _lessons.asStateFlow()
+
+    private var _purchasedState = MutableStateFlow(false)
+    val purchasedState = _purchasedState.asStateFlow()
 
     fun getLessons() {
         lessonsRepo.getLocalLessons()
@@ -41,5 +46,20 @@ class SingleLessonViewModel @Inject constructor(
             }
             .flowOn(Dispatchers.IO)
             .launchIn(viewModelScope)
+    }
+
+    fun checkPurchasedState() {
+        _purchasedState.value = sharedPrefs.isPaid
+    }
+
+    fun onPurchaseClicked() {
+        if (!sharedPrefs.isPaid) {
+            sharedPrefs.isPaid = true
+            checkPurchasedState()
+
+            lessonsRepo.fetchLessons()
+                .flowOn(Dispatchers.IO)
+                .launchIn(viewModelScope)
+        }
     }
 }

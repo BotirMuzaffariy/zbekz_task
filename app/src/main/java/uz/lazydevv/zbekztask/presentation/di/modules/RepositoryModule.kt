@@ -5,6 +5,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import uz.lazydevv.zbekztask.data.db.dao.LessonDao
+import uz.lazydevv.zbekztask.data.preferences.AppSharedPrefs
 import uz.lazydevv.zbekztask.data.repositories.LessonsRepoImpl
 import uz.lazydevv.zbekztask.domain.datasources.LessonsDataSource
 import uz.lazydevv.zbekztask.domain.repositories.LessonsRepo
@@ -20,6 +21,14 @@ object RepositoryModule {
     fun provideLessonsRepo(
         lessonsDataSource: LessonsDataSource,
         lessonDao: LessonDao,
-        networkHelper: NetworkHelper
-    ): LessonsRepo = LessonsRepoImpl(lessonsDataSource, lessonDao, networkHelper)
+        networkHelper: NetworkHelper,
+        sharedPrefs: AppSharedPrefs
+    ): LessonsRepo {
+        return LessonsRepoImpl(
+            lessonsDataSource = lessonsDataSource,
+            lessonDao = lessonDao,
+            networkHelper = networkHelper,
+            sharedPrefs = sharedPrefs
+        )
+    }
 }

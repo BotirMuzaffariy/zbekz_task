@@ -8,4 +8,5 @@ data class LessonM(
     val description: String,
     val thumbnailUrl: String,
     val videoUrl: String,
+    val isOpen: Boolean = false,
 ) : Serializable

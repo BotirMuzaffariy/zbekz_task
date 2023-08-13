@@ -7,8 +7,10 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import by.kirich1409.viewbindingdelegate.viewBinding
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import dagger.hilt.android.AndroidEntryPoint
 import uz.lazydevv.zbekztask.R
+import uz.lazydevv.zbekztask.databinding.BottomSheetPurchaseBinding
 import uz.lazydevv.zbekztask.databinding.FragmentLessonsListBinding
 import uz.lazydevv.zbekztask.presentation.extensions.collectLatestOnStarted
 import uz.lazydevv.zbekztask.presentation.extensions.navigate
@@ -22,11 +24,26 @@ class LessonsListFragment : Fragment(R.layout.fragment_lessons_list) {
 
     private val binding by viewBinding(FragmentLessonsListBinding::bind)
 
-    private val lessonsAdapter by lazy {
-        RvLessonsAdapter { position ->
-            val bundle = bundleOf(KEY_LESSON_POS to position)
-            navigate(R.id.action_lessonsListFragment_to_singleLessonFragment, bundle)
+    private val purchaseBinding by lazy {
+        BottomSheetPurchaseBinding.inflate(layoutInflater)
+    }
+
+    private val purchaseSheet by lazy {
+        BottomSheetDialog(requireContext()).apply {
+            setContentView(purchaseBinding.root)
         }
+    }
+
+    private val lessonsAdapter by lazy {
+        RvLessonsAdapter(
+            onLessonClicked = { position ->
+                val bundle = bundleOf(KEY_LESSON_POS to position)
+                navigate(R.id.action_lessonsListFragment_to_singleLessonFragment, bundle)
+            },
+            onClosedLessonClicked = {
+                openPurchaseSheet()
+            }
+        )
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -40,8 +57,11 @@ class LessonsListFragment : Fragment(R.layout.fragment_lessons_list) {
 
         observeLessons()
 
-        with(binding) {
-            rvLessons.adapter = lessonsAdapter
+        binding.rvLessons.adapter = lessonsAdapter
+
+        purchaseBinding.btnPurchase.setOnClickListener {
+            viewModel.onPurchaseClicked()
+            purchaseSheet.dismiss()
         }
     }
 
@@ -61,6 +81,10 @@ class LessonsListFragment : Fragment(R.layout.fragment_lessons_list) {
                 }
             }
         }
+    }
+
+    private fun openPurchaseSheet() {
+        purchaseSheet.show()
     }
 
     companion object {

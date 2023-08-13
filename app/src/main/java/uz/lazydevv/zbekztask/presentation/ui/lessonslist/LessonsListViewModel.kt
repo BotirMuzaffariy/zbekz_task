@@ -12,13 +12,15 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.onStart
 import uz.lazydevv.zbekztask.data.models.LessonM
+import uz.lazydevv.zbekztask.data.preferences.AppSharedPrefs
 import uz.lazydevv.zbekztask.domain.repositories.LessonsRepo
 import uz.lazydevv.zbekztask.presentation.utils.Resource
 import javax.inject.Inject
 
 @HiltViewModel
 class LessonsListViewModel @Inject constructor(
-    private val lessonsRepo: LessonsRepo
+    private val lessonsRepo: LessonsRepo,
+    private val sharedPrefs: AppSharedPrefs
 ) : ViewModel() {
 
     private var _lessons = MutableStateFlow<Resource<List<LessonM>>>(Resource.Loading())
@@ -43,4 +45,10 @@ class LessonsListViewModel @Inject constructor(
             .launchIn(viewModelScope)
     }
 
+    fun onPurchaseClicked() {
+        if (!sharedPrefs.isPaid) {
+            sharedPrefs.isPaid = true
+            fetchLessons()
+        }
+    }
 }

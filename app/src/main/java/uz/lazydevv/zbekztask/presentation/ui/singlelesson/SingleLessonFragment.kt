@@ -12,13 +12,16 @@ import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.source.ProgressiveMediaSource
 import com.google.android.exoplayer2.upstream.DefaultDataSource
 import com.google.android.exoplayer2.upstream.cache.CacheDataSource
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import dagger.hilt.android.AndroidEntryPoint
 import uz.lazydevv.zbekztask.R
 import uz.lazydevv.zbekztask.data.models.LessonM
+import uz.lazydevv.zbekztask.databinding.BottomSheetPurchaseBinding
 import uz.lazydevv.zbekztask.databinding.FragmentSingleLessonBinding
 import uz.lazydevv.zbekztask.presentation.extensions.collectLatestOnStarted
 import uz.lazydevv.zbekztask.presentation.ui.App
 import uz.lazydevv.zbekztask.presentation.ui.lessonslist.LessonsListFragment
+import uz.lazydevv.zbekztask.presentation.utils.AppConstants.DEFAULT_OPENED_LESSONS_COUNT
 import uz.lazydevv.zbekztask.presentation.utils.Resource
 
 @AndroidEntryPoint
@@ -31,18 +34,35 @@ class SingleLessonFragment : Fragment(R.layout.fragment_single_lesson) {
     private var lessons: List<LessonM> = emptyList()
 
     private var currentLessonPos = 0
+    private var isPurchased = false
+
     private lateinit var exoPlayer: ExoPlayer
 
+    private val purchaseBinding by lazy {
+        BottomSheetPurchaseBinding.inflate(layoutInflater)
+    }
+
+    private val purchaseSheet by lazy {
+        BottomSheetDialog(requireContext()).apply {
+            setContentView(purchaseBinding.root)
+        }
+    }
     private val exoPlayerListener by lazy {
         object : Player.Listener {
             override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) {
                 super.onMediaItemTransition(mediaItem, reason)
 
-                // check if next btn clicked
-                if (currentLessonPos + 1 == exoPlayer.currentMediaItemIndex) {
-                    if (exoPlayer.currentMediaItemIndex > 2) {
-                        exoPlayer.seekToPreviousMediaItem()
-                        return
+                if (!isPurchased) {
+                    // check for next btn click
+                    if (currentLessonPos + 1 == exoPlayer.currentMediaItemIndex) {
+                        if (exoPlayer.currentMediaItemIndex >= DEFAULT_OPENED_LESSONS_COUNT) {
+                            purchaseSheet.show()
+
+                            exoPlayer.seekToPreviousMediaItem()
+                            exoPlayer.pause()
+
+                            return
+                        }
                     }
                 }
 
@@ -58,6 +78,7 @@ class SingleLessonFragment : Fragment(R.layout.fragment_single_lesson) {
         currentLessonPos = arguments?.getInt(LessonsListFragment.KEY_LESSON_POS, 0) ?: 0
 
         viewModel.getLessons()
+        viewModel.checkPurchasedState()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -65,8 +86,19 @@ class SingleLessonFragment : Fragment(R.layout.fragment_single_lesson) {
 
         observeLessons()
 
-        binding.toolbar.setNavigationOnClickListener {
-            findNavController().popBackStack()
+        observePurchasedState()
+
+        with(binding) {
+            playerView.controllerAutoShow = false
+
+            toolbar.setNavigationOnClickListener {
+                findNavController().popBackStack()
+            }
+        }
+
+        purchaseBinding.btnPurchase.setOnClickListener {
+            viewModel.onPurchaseClicked()
+            purchaseSheet.dismiss()
         }
     }
 
@@ -134,6 +166,12 @@ class SingleLessonFragment : Fragment(R.layout.fragment_single_lesson) {
 
                 else -> Unit
             }
+        }
+    }
+
+    private fun observePurchasedState() {
+        collectLatestOnStarted(viewModel.purchasedState) {
+            isPurchased = it
         }
     }
 }

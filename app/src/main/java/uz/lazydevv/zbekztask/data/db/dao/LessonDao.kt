@@ -10,7 +10,7 @@ import uz.lazydevv.zbekztask.data.db.entities.LessonEntity
 @Dao
 interface LessonDao {
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun addLessons(lessons: List<LessonEntity>)
 
     @Query("select * from LessonEntity")

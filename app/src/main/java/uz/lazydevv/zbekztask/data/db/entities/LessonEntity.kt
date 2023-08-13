@@ -10,8 +10,7 @@ data class LessonEntity(
     @ColumnInfo(name = "lesson_id") val lessonId: Int,
     val title: String,
     val description: String,
-    @ColumnInfo(name = "thumbnail_url")
-    val thumbnailUrl: String,
-    @ColumnInfo(name = "video_url")
-    val videoUrl: String
+    @ColumnInfo(name = "thumbnail_url") val thumbnailUrl: String,
+    @ColumnInfo(name = "video_url") val videoUrl: String,
+    @ColumnInfo(name = "is_open") val isOpen: Boolean,
 )
