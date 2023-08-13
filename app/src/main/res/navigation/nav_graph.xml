@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/lessonsListFragment">
+
+    <fragment
+        android:id="@+id/lessonsListFragment"
+        android:name="uz.lazydevv.zbekztask.presentation.ui.lessonslist.LessonsListFragment"
+        android:label="LessonsListFragment">
+
+        <action
+            android:id="@+id/action_lessonsListFragment_to_singleLessonFragment"
+            app:destination="@id/singleLessonFragment" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/singleLessonFragment"
+        android:name="uz.lazydevv.zbekztask.presentation.ui.singlelesson.SingleLessonFragment"
+        android:label="SingleLessonFragment" />
+
+</navigation>
