@@ -14,6 +14,7 @@ import uz.lazydevv.zbekztask.databinding.BottomSheetPurchaseBinding
 import uz.lazydevv.zbekztask.databinding.FragmentLessonsListBinding
 import uz.lazydevv.zbekztask.presentation.extensions.collectLatestOnStarted
 import uz.lazydevv.zbekztask.presentation.extensions.navigate
+import uz.lazydevv.zbekztask.presentation.extensions.showToast
 import uz.lazydevv.zbekztask.presentation.ui.lessonslist.adapters.RvLessonsAdapter
 import uz.lazydevv.zbekztask.presentation.utils.Resource
 
@@ -62,6 +63,7 @@ class LessonsListFragment : Fragment(R.layout.fragment_lessons_list) {
         purchaseBinding.btnPurchase.setOnClickListener {
             viewModel.onPurchaseClicked()
             purchaseSheet.dismiss()
+            showToast(getString(R.string.all_lessons_opened))
         }
     }
 

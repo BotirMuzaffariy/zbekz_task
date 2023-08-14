@@ -1,6 +1,7 @@
 package uz.lazydevv.zbekztask.presentation.extensions
 
 import android.os.Bundle
+import android.widget.Toast
 import androidx.annotation.IdRes
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
@@ -21,4 +22,8 @@ fun <T> Fragment.collectLatestOnStarted(flow: Flow<T>, collect: suspend (T) -> U
             flow.collectLatest(collect)
         }
     }
+}
+
+fun Fragment.showToast(message: String) {
+    Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
 }

@@ -3,4 +3,5 @@
     <string name="lessons">Lessons</string>
     <string name="purchase">Purchase</string>
     <string name="purchase_info">You should pay to open all lessons.\nPay only once and enjoy forever!</string>
+    <string name="all_lessons_opened">All lessons opened</string>
 </resources>

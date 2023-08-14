@@ -19,6 +19,7 @@ import uz.lazydevv.zbekztask.data.models.LessonM
 import uz.lazydevv.zbekztask.databinding.BottomSheetPurchaseBinding
 import uz.lazydevv.zbekztask.databinding.FragmentSingleLessonBinding
 import uz.lazydevv.zbekztask.presentation.extensions.collectLatestOnStarted
+import uz.lazydevv.zbekztask.presentation.extensions.showToast
 import uz.lazydevv.zbekztask.presentation.ui.App
 import uz.lazydevv.zbekztask.presentation.ui.lessonslist.LessonsListFragment
 import uz.lazydevv.zbekztask.presentation.utils.AppConstants.DEFAULT_OPENED_LESSONS_COUNT
@@ -99,6 +100,7 @@ class SingleLessonFragment : Fragment(R.layout.fragment_single_lesson) {
         purchaseBinding.btnPurchase.setOnClickListener {
             viewModel.onPurchaseClicked()
             purchaseSheet.dismiss()
+            showToast(getString(R.string.all_lessons_opened))
         }
     }
 
