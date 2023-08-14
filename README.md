@@ -16,4 +16,4 @@ Material components
 
 # Preview
 
-https://github.com/lazy-devv/zbekz_task/assets/69151373/1ae1a5cf-0c1e-4835-b98d-3bd7b10e16ce
+https://github.com/lazy-devv/zbekz_task/assets/69151373/505be987-bbf9-4a39-ab67-dcd6fe9fe8d5
