@@ -31,6 +31,8 @@
         app:layout_constraintHeight_percent="0.3"
         app:layout_constraintTop_toBottomOf="@id/app_bar"
         app:resize_mode="zoom"
+        app:show_fastforward_button="false"
+        app:show_rewind_button="false"
         app:show_shuffle_button="false"
         app:show_subtitle_button="false"
         app:show_vr_button="false" />

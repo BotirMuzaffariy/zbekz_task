@@ -4,7 +4,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flowOn
@@ -20,7 +22,8 @@ import javax.inject.Inject
 @HiltViewModel
 class SingleLessonViewModel @Inject constructor(
     private val lessonsRepo: LessonsRepo,
-    private val sharedPrefs: AppSharedPrefs
+    private val sharedPrefs: AppSharedPrefs,
+    private val fetchLessonsSharedFlow: MutableSharedFlow<Boolean>
 ) : ViewModel() {
 
     private var _lessons = MutableStateFlow<Resource<List<LessonM>>>(Resource.Loading())
@@ -56,10 +59,7 @@ class SingleLessonViewModel @Inject constructor(
         if (!sharedPrefs.isPaid) {
             sharedPrefs.isPaid = true
             checkPurchasedState()
-
-            lessonsRepo.fetchLessons()
-                .flowOn(Dispatchers.IO)
-                .launchIn(viewModelScope)
+            fetchLessonsSharedFlow.tryEmit(true)
         }
     }
 }

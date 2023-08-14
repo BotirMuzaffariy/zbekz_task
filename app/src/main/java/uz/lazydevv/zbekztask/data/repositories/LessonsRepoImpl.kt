@@ -40,8 +40,9 @@ class LessonsRepoImpl(
                     throw Exception("No internet connection!")
                 }
 
-                list.map {
-                    it.toLessonM()
+                list.mapIndexed { index, lesson ->
+                    lesson.toLessonM()
+                        .copy(isOpen = if (sharedPrefs.isPaid) true else index < DEFAULT_OPENED_LESSONS_COUNT)
                 }
             }
         }

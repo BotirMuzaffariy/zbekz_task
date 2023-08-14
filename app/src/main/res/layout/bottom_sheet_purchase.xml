@@ -4,13 +4,23 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:paddingHorizontal="14dp"
-    android:paddingTop="20dp"
-    android:paddingBottom="32dp">
+    android:paddingTop="22dp"
+    android:paddingBottom="24dp">
+
+    <com.google.android.material.textview.MaterialTextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="@string/purchase_info"
+        android:textSize="16sp"
+        android:textStyle="bold" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btn_purchase"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:paddingVertical="14dp"
         android:text="@string/purchase" />
 
 </LinearLayout>
